@@ -34,7 +34,7 @@ public class MySQLProtectorDao implements ProtectorDao {
   @Override
   public Protector findByNoAndPhone(Protector protector) {
     SqlSession sqlSession = sqlSessionFactory.openSession(false);
-    return sqlSession.selectOne("bitcamp.myapp_prject.dao.ProtectorDao.findByPhoneAndPassword",
+    return sqlSession.selectOne("bitcamp.myapp_project.dao.ProtectorDao.findByNoAndPhone",
         protector);
   }
 

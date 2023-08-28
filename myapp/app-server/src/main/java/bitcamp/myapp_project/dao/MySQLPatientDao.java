@@ -67,4 +67,9 @@ public class MySQLPatientDao implements PatientDao {
     SqlSession sqlSession = sqlSessionFactory.openSession(false);
     return sqlSession.delete("bitcamp.myapp_project.dao.PatientDao.deleteFile", no);
   }
+  @Override
+  public int deleteFiles(int patientNo) {
+    SqlSession sqlSession = sqlSessionFactory.openSession(false);
+    return sqlSession.delete("bitcamp.myapp_project.dao.PatientDao.deleteFiles", patientNo);
+  }
 }

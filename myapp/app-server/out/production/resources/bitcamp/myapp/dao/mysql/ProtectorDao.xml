@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="bitcamp.myapp_project.dao.ProtectorDao">
+
+  <!-- 결과 레코드의 컬럼 값을 자바 객체에 어떻게 담을 것인지 설정한다. -->
+  <resultMap type="protector" id="protectorMap">
+    <id     column="protector_no" property="no"/>
+    <result column="name"         property="name"/>
+    <result column="email"        property="email"/>
+    <result column="phone"        property="phone"/>
+    <result column="address"      property="address"/>
+    <result column="post_no"      property="postNo"/>
+    <result column="created_date" property="createdDate"/>
+    <result column="photo"        property="photo"/>
+  </resultMap>
+
+  <insert id="insert" parameterType="protector">
+    insert into myapp_protector(name,email,phone,address,post_no,photo)
+    values(#{name},#{email},sha1(#{phone}),#{address},#{postNo},#{photo})
+  </insert>
+
+  <select id="findAll" resultMap="protectorMap">
+    select
+      protector_no,
+      name,
+      email,
+      address,
+      post_no,
+      photo
+    from
+      myapp_protector
+    order by
+      name asc
+  </select>
+
+  <select id="findBy" parameterType="int" resultMap="protectorMap">
+    select
+      protector_no,
+      name,
+      email,
+      post_no,
+      created_date,
+      photo
+    from
+      myapp_protector
+    where
+      protector_no=#{no}
+  </select>
+
+  <select id="findByNoAndPhone" parameterType="protector" resultMap="protectorMap">
+    select
+      protector_no,
+      name,
+      email,
+      post_no,
+      created_date,
+      photo
+    from
+      myapp_protector
+    where
+      protector_no=#{no}
+      and phone=sha1(#{phone})
+  </select>
+
+  <update id="update" parameterType="protector">
+    update myapp_protector set
+      name=#{name}
+      ,email=#{email}
+      ,phone=sha1(#{phone})
+      ,address=#{address}
+      ,post_no=#{postNo}
+      <if test="photo != null">
+      ,photo=#{photo}
+      </if>
+    where
+      protector_no=#{no}
+  </update>
+
+  <delete id="delete" parameterType="int">
+    delete from myapp_protector
+    where
+      protector_no=#{no}
+  </delete>
+</mapper>
+
+

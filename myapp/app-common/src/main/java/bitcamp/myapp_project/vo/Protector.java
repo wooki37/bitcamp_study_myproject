@@ -17,6 +17,20 @@ public class Protector implements Serializable {
   private String photo;
 
   @Override
+  public String toString() {
+    return "Protector{" +
+            "no=" + no +
+            ", name='" + name + '\'' +
+            ", email='" + email + '\'' +
+            ", phone='" + phone + '\'' +
+            ", address='" + address + '\'' +
+            ", postNo='" + postNo + '\'' +
+            ", createdDate=" + createdDate +
+            ", photo='" + photo + '\'' +
+            '}';
+  }
+
+  @Override
   public int hashCode() {
     return Objects.hash(no);
   }

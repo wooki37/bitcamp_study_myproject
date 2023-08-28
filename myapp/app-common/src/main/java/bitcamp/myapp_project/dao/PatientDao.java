@@ -14,4 +14,5 @@ public interface PatientDao {
   int insertFiles(Patient patient);
   AHAttachedFile findFileBy(int no);
   int deleteFile(int fileNo);
+  int deleteFiles(int patientNo);
 }
