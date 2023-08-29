@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="bitcamp.myapp_project.dao.PatientDao">
+
+  <!-- 결과 레코드의 컬럼 값을 자바 객체에 어떻게 담을 것인지 설정한다. -->
+  <resultMap type="patient" id="patientMap">
+    <id     column="patient_no"   property="patientNo"/>
+    <result column="protector_no" property="protectorNo"/>
+    <result column="name"         property="name"/>
+    <result column="breeds"       property="breeds"/>
+    <result column="age"          property="age"/>
+    <result column="gender"       property="gender"/>
+    <result column="created_date" property="createdDate"/>
+    <result column="category"     property="category"/>
+    
+    <collection property="attachedFiles" ofType="attachedFile">
+      <id     column="patient_file_no"    property="patientNo"/>
+      <result column="filepath"         property="filePath"/>
+    </collection>
+    
+  </resultMap>
+
+  <resultMap type="attachedFile" id="attachedFileMap">
+    <id     column="patient_file_no"  property="no"/>
+    <result column="filepath"       property="filePath"/>
+    <result column="patient_no"       property="patientNo"/>
+  </resultMap>
+
+  <insert id="insert" parameterType="patient"
+          useGeneratedKeys="true" keyColumn="patient_no" keyProperty="no">>
+    insert into myapp_patient(protector_no,name,breeds,age,gender,category)
+    values(#{protectorNo},#{name},#{breeds},#{age},#{gender},#{category})
+  </insert>
+
+  <select id="findAll" parameterType="int" resultMap="patientMap">
+    select
+      p.patient_no,
+      p.protector_no,
+      p.name,
+      p.breeds,
+      p.age,
+      p.created_date,
+      p.category,
+      p.gender
+    from
+      myapp_patient
+    where
+      category=#{categoryNo}
+    order by
+      patient_no desc
+  </select>
+
+  <select id="findBy" parameterType="map" resultMap="patientMap">
+    select
+      p.patient_no,
+      p.protector_no,
+      p.name,
+      p.breeds,
+      p.age,
+      p.gender,
+      p.created_date,
+      p.category,
+      f.patient_file_no,
+      f.filepath
+    from
+      myapp_patient
+      left outer join myapp_patient_file f on p.patient_no=f.patient_no
+    where
+      p.category=#{categoryNo}
+      and patient_no=#{patientNo}
+  </select>
+    
+  <update id="update" parameterType="patient">
+    update myapp_patient set
+      protector_no=#{protectorNo},
+      name=#{name},
+      breeds=#{breeds},
+      age=#{age},
+      gender=#{gender}
+    where
+      category=#{category}
+      and patient_no=#{patientNo}
+  </update>
+  
+  <delete id="delete" parameterType="patient">
+    delete from myapp_patient
+    where
+      category=#{category}
+      and patient_no=#{patientNo}
+  </delete>
+  
+  <insert id="insertFiles" parameterType="patient">
+  insert into myapp_patient_file(filepath, patient_no)
+  values
+  <foreach collection="attachedFiles" item="file" separator=",">(#{file.filePath}, #{patientNo})
+  </foreach>
+  </insert>
+  <select id="findFileBy" parameterType="int" resultMap="attachedFileMap">
+    select
+    patient_file_no,
+    filepath,
+    patient_no
+    from
+    myapp_patient_file
+    where
+    patient_file_no=#{patientNo}
+  </select>
+  <delete id="deleteFile" parameterType="int">
+    delete from myapp_patient_file
+    where
+    patient_file_no=#{patientNo}
+  </delete>
+
+  <delete id="deleteFiles" parameterType="int">
+    delete from myapp_patient_file
+    where
+    patient_no=#{patientNo}
+  </delete>
+</mapper>
+
+
+
+
